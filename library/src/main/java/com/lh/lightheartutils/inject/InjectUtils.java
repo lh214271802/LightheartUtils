@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 
 import com.lh.lightheartutils.anno.InjectLayout;
 import com.lh.lightheartutils.anno.InjectView;
+import com.lh.lightheartutils.anno.OnClick;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
@@ -47,6 +49,8 @@ public final class InjectUtils {
         private MyInjector() {
         }
 
+        /* ==================================注入========================================*/
+
         @Override
         public void inject(Activity activity) {
             Class<? extends Activity> aClass = activity.getClass();
@@ -76,6 +80,38 @@ public final class InjectUtils {
             return null;
         }
 
+        @Override
+        public void inject(Object holder, View view) {
+            if (holder == null) {
+                return;
+            }
+            findViews(holder, holder.getClass().getDeclaredFields(), view);
+            setOnclicks(holder, holder.getClass().getDeclaredMethods(), view);
+        }
+
+        //TODO FUCK
+        private void setOnclicks(Object holder, Method[] methods, View view) {
+            for (int i = 0; i < methods.length; i++) {
+                if (Modifier.isStatic(methods[i].getModifiers())||Modifier.isPrivate(methods[i].getModifiers())) {
+                    continue;
+                }
+                try {
+                    OnClick onClick = methods[i].getAnnotation(OnClick.class);
+                    int[] value = onClick.value();
+                    for (int j = 0; j < value.length; j++) {
+
+                    }
+                    methods[i].invoke(holder);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        /* ==================================注入========================================*/
+
         private void findViews(Fragment fragment, Class clazz, View view) {
             if (clazz == null) {
                 return;
@@ -97,14 +133,6 @@ public final class InjectUtils {
                 Field[] fields = clazz.getDeclaredFields();
                 findViews(activity, fields, parentView);
             }
-        }
-
-        @Override
-        public void inject(Object holder, View view) {
-            if (holder == null) {
-                return;
-            }
-            findViews(holder, holder.getClass().getDeclaredFields(), view);
         }
 
         /**
