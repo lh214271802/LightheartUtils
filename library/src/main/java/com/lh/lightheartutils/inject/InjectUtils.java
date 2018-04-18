@@ -89,27 +89,6 @@ public final class InjectUtils {
             setOnclicks(holder, holder.getClass().getDeclaredMethods(), view);
         }
 
-        //TODO FUCK
-        private void setOnclicks(Object holder, Method[] methods, View view) {
-            for (int i = 0; i < methods.length; i++) {
-                if (Modifier.isStatic(methods[i].getModifiers())||Modifier.isPrivate(methods[i].getModifiers())) {
-                    continue;
-                }
-                try {
-                    OnClick onClick = methods[i].getAnnotation(OnClick.class);
-                    int[] value = onClick.value();
-                    for (int j = 0; j < value.length; j++) {
-
-                    }
-                    methods[i].invoke(holder);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
         /* ==================================注入========================================*/
 
         private void findViews(Fragment fragment, Class clazz, View view) {
@@ -120,7 +99,38 @@ public final class InjectUtils {
                 findViews(fragment, clazz.getSuperclass(), view);
             }
             findViews(fragment, clazz.getDeclaredFields(), view);
+            setOnclicks(fragment, clazz.getDeclaredMethods(), view);
         }
+
+
+        private void setOnclicks(final Object holder, Method[] methods, View view) {
+            for (int i = 0; i < methods.length; i++) {
+                final Method method = methods[i];
+                if (Modifier.isStatic(method.getModifiers()) || Modifier.isPrivate(method.getModifiers())) {
+                    continue;
+                }
+                OnClick onClick = method.getAnnotation(OnClick.class);
+                if (onClick != null) {
+                    final int[] value = onClick.value();
+                    for (int j = 0; j < value.length; j++) {
+                        final int finalJ = j;
+                        view.findViewById(value[j]).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    method.invoke(holder, value[finalJ]);
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                } catch (InvocationTargetException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
 
         private void findViews(Activity activity, Class clazz) {
             View parentView = activity.getWindow().getDecorView();
@@ -131,7 +141,9 @@ public final class InjectUtils {
                     findViews(activity, clazz.getSuperclass());
                 }
                 Field[] fields = clazz.getDeclaredFields();
+                Method[] methods = clazz.getDeclaredMethods();
                 findViews(activity, fields, parentView);
+                setOnclicks(activity,methods,parentView);
             }
         }
 

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.lh.lightheartutils.anno.InjectLayout;
 import com.lh.lightheartutils.anno.InjectView;
+import com.lh.lightheartutils.anno.OnClick;
 import com.lh.lightheartutils.inject.InjectUtils;
 
 /**
@@ -38,18 +39,25 @@ public class TestActivity extends BaseActivity {
         childHolder = new ChildHolder();
         InjectUtils.get().inject(childHolder, child);
         container.addView(child);
-        childHolder.item_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                childHolder.item_btn.setText("春天在哪里");
-            }
-        });
     }
 
     class ChildHolder {
 
         @InjectView(R.id.item_btn)
         Button item_btn;
+
+        @InjectView(R.id.item_btn2)
+        Button item_btn2;
+
+        @OnClick(R.id.item_btn)
+        public void seto(int id) {
+            item_btn.setText("春天在哪里" + id);
+        }
+
+        @OnClick(R.id.item_btn2)
+        public void setodd(int id) {
+            item_btn2.setText("春天在ffaa哪里" + id);
+        }
 
     }
 }

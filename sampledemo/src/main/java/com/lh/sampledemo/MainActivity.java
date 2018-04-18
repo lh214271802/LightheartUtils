@@ -2,12 +2,12 @@ package com.lh.sampledemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.lh.lightheartutils.anno.InjectLayout;
 import com.lh.lightheartutils.anno.InjectView;
+import com.lh.lightheartutils.anno.OnClick;
 
 @InjectLayout(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
@@ -27,15 +27,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOnclicks(text1, text2, text3, button);
 
         getSupportFragmentManager().beginTransaction().add(R.id.container, new TestFragment()).commit();
     }
 
-    @Override
-    public void onClick(View v) {
-        showToast(v.getId() + "");
-        switch (v.getId()) {
+    @OnClick({R.id.text1, R.id.text2, R.id.text3, R.id.button})
+    public void onClick(int id) {
+        showToast(id + "");
+        switch (id) {
             case R.id.text1:
                 break;
             case R.id.text2:
