@@ -1,4 +1,4 @@
-package com.lh.sampledemo;
+package com.lh.sampledemo.injecttest;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.lh.lightheartutils.anno.InjectLayout;
 import com.lh.lightheartutils.anno.InjectView;
 import com.lh.lightheartutils.inject.InjectUtils;
+import com.lh.sampledemo.R;
 
 /**
  * @author liaohui

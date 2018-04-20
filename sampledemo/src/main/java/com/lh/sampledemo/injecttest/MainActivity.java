@@ -1,4 +1,4 @@
-package com.lh.sampledemo;
+package com.lh.sampledemo.injecttest;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.lh.lightheartutils.anno.InjectLayout;
 import com.lh.lightheartutils.anno.InjectView;
 import com.lh.lightheartutils.anno.OnClick;
+import com.lh.sampledemo.R;
 
 @InjectLayout(R.layout.activity_main)
 public class MainActivity extends BaseActivity {

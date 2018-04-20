@@ -1,4 +1,4 @@
-package com.lh.sampledemo;
+package com.lh.sampledemo.injecttest;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
